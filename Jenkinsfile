@@ -1,54 +1,27 @@
 pipeline {
-    agent {
-        docker {
-            image 'maven:3-alpine'
-            args '-v /root/.m2:/root/.m2'
-        }
+    agent any
+    parameters {
+        string(name: 'SOURCE_BRANCH', defaultValue: 'master', description: '...')
+        string(name: 'RELEASE_TAG', defaultValue: '', description: '...')
     }
     stages {
-        // stage('Build') {
-        //     steps {
-        //         sh 'mvn -B -DskipTests clean package'
-        //     }
-        // }
-        // stage('Test') {
-        //     steps {
-        //         sh 'mvn test'
-        //     }
-        //     post {
-        //         always {
-        //             junit 'target/surefire-reports/*.xml'
-        //         }
-        //     }
-        // }
-        // stage('Deliver') {
-        //     steps {
-        //         sh './jenkins/scripts/deliver.sh'
-        //     }
-        // }
-
-        stage('docker build and push to ecr') {
-      
+        stage('Build and deploy presto zip to artifactory.') {
             steps {
 
-                    docker ps
-                    
+                sh 'echo "Building to version = $RELEASE_TAG"'
 
+                withMaven(maven: 'MAVEN_TOOL') {
+                  sh "mvn versions:set -DnewVersion=$RELEASE_TAG"
+                  sh "mvn clean install -DskipTests"
+                }
 
+                // withCredentials([usernamePassword(credentialsId: 'artifactory-token', usernameVariable: 'AUSR',
+                //     passwordVariable: 'APWD')]) {
+                //   sh '''curl -X PUT -u $AUSR:$APWD -T presto-server/target/presto-server-$RELEASE_TAG.tar.gz "https://company.com/artifactory/repo/io/presto/$RELEASE_TAG/presto-server-$RELEASE_TAG.tar.gz" '''
+                // }
+                
+                sh 'echo "Done building and tagging to name = $RELEASE_TAG"'
             }
         }
     }
 }
-
-// node {
-//   stage 'Checkout'
-//   git 'ssh://git@github.com:irwin-tech/docker-pipeline-demo.git'
- 
-//   stage 'Docker build'
-//   docker.build('demo')
- 
-//   stage 'Docker push'
-//   docker.withRegistry('https://1234567890.dkr.ecr.us-east-1.amazonaws.com', 'ecr:us-east-1:demo-ecr-credentials') {
-//     docker.image('demo').push('latest')
-//   }
-// }
