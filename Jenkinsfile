@@ -8,6 +8,12 @@ pipeline {
         //     }
         // }
 
+        stage ('Clone') {
+            steps {
+                git branch: 'master', url: "https://github.com/jfrog/project-examples.git"
+            }
+        }
+
         stage('server'){
           steps {
             rtSever {
@@ -26,22 +32,22 @@ pipeline {
           }
         }
 
-        stage ('Exec Maven') {
-            steps {
-                rtMavenRun (
-                    tool: 'MAVEN_TOOL', // Tool name from Jenkins configuration
-                    pom: 'pom.xml',
-                    goals: 'clean install',
-                )
-            }
-        }
+        // stage ('Exec Maven') {
+        //     steps {
+        //         rtMavenRun (
+        //             tool: 'MAVEN_TOOL', // Tool name from Jenkins configuration
+        //             pom: 'pom.xml',
+        //             goals: 'clean install',
+        //         )
+        //     }
+        // }
 
-        stage ('Publish build info') {
-            steps {
-                rtPublishBuildInfo (
-                    serverId: "sf-artifactory"
-                )
-            }
-        }
+        // stage ('Publish build info') {
+        //     steps {
+        //         rtPublishBuildInfo (
+        //             serverId: "sf-artifactory"
+        //         )
+        //     }
+        // }
     }
 }
