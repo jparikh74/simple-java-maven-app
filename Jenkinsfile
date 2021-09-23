@@ -16,7 +16,7 @@ pipeline {
 
         stage('server'){
           steps {
-            rtSever {
+            rtSever (
               id: 'sf-artifactory',
               url: 'http://52.25.228.74:8081/artifactory',
               username: 'jenkins',
@@ -28,7 +28,7 @@ pipeline {
               // Configure the connection timeout (in seconds).
               // The default value (if not configured) is 300 seconds:
               timeout = 300
-            }
+            )
           }
         }
 
