@@ -16,7 +16,7 @@ pipeline {
 
         stage('server'){
           steps {
-            rtSever (
+            rtServer (
               id: 'sf-artifactory',
               url: 'http://52.25.228.74:8081/artifactory',
               username: 'jenkins',
