@@ -1,7 +1,7 @@
 pipeline {
     agent any
 
-    def server = Artifactory.server "SERVER_ID"
+    def server = Artifactory.server "sf-artifactory"
 
     stages {
         stage('Build') { 
