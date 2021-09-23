@@ -8,16 +8,16 @@ pipeline {
         //     }
         // }
 
-        stage ('Clone') {
-            steps {
-                git branch: 'master', url: "https://github.com/jfrog/project-examples.git"
-            }
-        }
+        // stage ('Clone') {
+        //     steps {
+        //         git branch: 'master', url: "https://github.com/jfrog/project-examples.git"
+        //     }
+        // }
 
         stage('server'){
           steps {
             rtSever {
-              id: "sf-artifactory",
+              id: 'sf-artifactory',
               url: 'http://52.25.228.74:8081/artifactory',
               username: 'jenkins',
               password: '5Ze0!%rU3d',
